@@ -110,4 +110,43 @@ public class abstr
         }
     }
     
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.OutputEncoding = System.Text.Encoding.UTF8;
+            
+            List<Delivery> deliveries = new List<Delivery>
+            {
+                new DocumentDelivery("Іваненко І.І.", 0.2, 40m, isExpress: true),
+                new DocumentDelivery("Петренко П.П.", 0.5, 40m, isExpress: false),
+                new PackageDelivery("Сидоренко С.С.", 5.5, 70m, isFragile: true),
+                new PackageDelivery("Коваленко К.К.", 12.0, 70m, isFragile: false),
+                new CargoDelivery("ТОВ 'БудСервіс'", 250.0, 300m, requiresLoader: true)
+            };
+
+            Console.WriteLine("=== СПИСОК ВІДПРАВЛЕНЬ ===\n");
+            
+            foreach (var delivery in deliveries)
+            {
+                Console.WriteLine(delivery.GetInfo());
+                Console.WriteLine($"Кінцева вартість: {delivery.CalculateCost():F2} грн");
+                
+                if (delivery is ITrackable trackable)
+                {
+                    Console.WriteLine($"Трекінг-код: {trackable.GetTrackingCode()}");
+                }
+                Console.WriteLine(new string('-', 60));
+            }
+            
+            var mostExpensive = deliveries.OrderByDescending(d => d.CalculateCost()).First();
+            Console.WriteLine($"\n[Найдорожче відправлення]");
+            Console.WriteLine($"Відправник: {mostExpensive.Sender}, Вартість: {mostExpensive.CalculateCost():F2} грн");
+            
+            decimal averageCost = deliveries.Average(d => d.CalculateCost());
+            Console.WriteLine($"\n[Середня вартість усіх відправлень]: {averageCost:F2} грн");
+            
+            Console.ReadLine();
+        }
+    }
 }
