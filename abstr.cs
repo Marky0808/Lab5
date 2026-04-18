@@ -36,4 +36,27 @@ public class abstr
         }
     }
     
+    public class DocumentDelivery : Delivery
+    {
+        public bool IsExpress { get; set; }
+
+        public DocumentDelivery(string sender, double weight, decimal baseCost, bool isExpress) 
+            : base(sender, weight, baseCost)
+        {
+            IsExpress = isExpress;
+            TrackingCode = "DOC-" + TrackingCode;
+        }
+
+        public override decimal CalculateCost()
+        {
+            decimal finalCost = BaseCost;
+            if (IsExpress) finalCost += 50m;
+            return finalCost;
+        }
+
+        public override string GetInfo()
+        {
+            return base.GetInfo() + $" | Тип: Документи | Експрес: {(IsExpress ? "Так" : "Ні")}";
+        }
+    }
 }
