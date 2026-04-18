@@ -22,5 +22,18 @@ public class abstr
             BaseCost = baseCost;
             TrackingCode = Guid.NewGuid().ToString().Substring(0, 8).ToUpper();
         }
+        
+        public abstract decimal CalculateCost();
+        
+        public virtual string GetInfo()
+        {
+            return $"Відправник: {Sender} | Вага: {Weight} кг | Базова вартість: {BaseCost} грн";
+        }
+        
+        public string GetTrackingCode()
+        {
+            return TrackingCode;
+        }
     }
+    
 }
