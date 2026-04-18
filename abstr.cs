@@ -59,4 +59,55 @@ public class abstr
             return base.GetInfo() + $" | Тип: Документи | Експрес: {(IsExpress ? "Так" : "Ні")}";
         }
     }
+
+    // Клас: Доставка посилок
+    public class PackageDelivery : Delivery
+    {
+        public bool IsFragile { get; set; } // Специфічна властивість (крихке)
+
+        public PackageDelivery(string sender, double weight, decimal baseCost, bool isFragile) 
+            : base(sender, weight, baseCost)
+        {
+            IsFragile = isFragile;
+            TrackingCode = "PKG-" + TrackingCode;
+        }
+
+        public override decimal CalculateCost()
+        {
+            // Вартість залежить від ваги + націнка за крихкість
+            decimal finalCost = BaseCost + (decimal)(Weight * 15);
+            if (IsFragile) finalCost *= 1.2m; // +20% до ціни
+            return finalCost;
+        }
+
+        public override string GetInfo()
+        {
+            return base.GetInfo() + $" | Тип: Посилка | Крихке: {(IsFragile ? "Так" : "Ні")}";
+        }
+    }
+    
+    public class CargoDelivery : Delivery
+    {
+        public bool RequiresLoader { get; set; }
+
+        public CargoDelivery(string sender, double weight, decimal baseCost, bool requiresLoader) 
+            : base(sender, weight, baseCost)
+        {
+            RequiresLoader = requiresLoader;
+            TrackingCode = "CRG-" + TrackingCode;
+        }
+
+        public override decimal CalculateCost()
+        {
+            decimal finalCost = BaseCost + (decimal)(Weight * 40);
+            if (RequiresLoader) finalCost += 800m;
+            return finalCost;
+        }
+
+        public override string GetInfo()
+        {
+            return base.GetInfo() + $" | Тип: Вантаж | Потребує вантажника: {(RequiresLoader ? "Так" : "Ні")}";
+        }
+    }
+    
 }
